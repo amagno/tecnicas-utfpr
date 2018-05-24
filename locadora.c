@@ -33,9 +33,9 @@ void preencherFilmes() {
 Cliente cadastrarCliente(int cod) {
     char nome[100];
     char telefone[100];
-    printf("Digite o nome: ");
+    printf("Digite o nome do cliente: ");
     scanf("%s", nome);
-    printf("Digite o telefone: ");
+    printf("Digite o telefone do cliente: ");
     scanf("%s", telefone);
     Cliente cliente;
     cliente.cod = cod;
@@ -47,7 +47,13 @@ Cliente cadastrarCliente(int cod) {
 void listarFilmes() {
     printf("---------- TODOS OS FILMES -----------\n\n");
     for (int i = 1; i <= QTDE_FILMES; i++) {
-        printf("CODIGO: %d - NOME: %s\n", filmes[i].cod, filmes[i].nome);
+        char alugado[10];
+        if (filmes[i].alugado == 1) {
+            strcpy(alugado, "SIM");
+        } else {
+            strcpy(alugado, "NAO");
+        }
+        printf("CODIGO: %d - NOME: %s - ALUGADO: %s\n\n", filmes[i].cod, filmes[i].nome, alugado);
     }
 }
 void listarFilmesDisponiveis() {
@@ -85,7 +91,30 @@ void alocarFilme() {
         }
     }
     if (encontrado == 0) {
-        printf("Nenhum filme encontrado com codigo: %d", codigo);
+        printf("Nenhum filme encontrado com CODIGO: %d \n\n\n", codigo);
+    } else {
+        printf("Filme CODIGO: %d alugado com sucesso! \n\n\n", codigo);
+    }
+}
+void devolverFilme() {
+    int codigo;
+    printf("Digite o codigo do filme: ");
+    scanf("%d", &codigo);
+
+    Cliente cliente;
+
+    int encontrado = 0;
+    for (int i = 1; i <= QTDE_FILMES; i++) {
+        if (filmes[i].cod == codigo && filmes[i].alugado == 1) {
+            filmes[i].alugado = 0;
+            filmes[i].cliente = cliente;
+            encontrado = 1;
+        }
+    }
+    if (encontrado == 0) {
+        printf("Nenhum filme alugado encontrado com CODIGO: %d \n\n\n", codigo);
+    } else {
+        printf("Filme CODIGO: %d, devolvido com successo! \n\n\n", codigo);
     }
 }
 
@@ -118,7 +147,9 @@ void tela() {
                 alocarFilme();
             break;
 
-            case 2: break;
+            case 2: 
+                devolverFilme();
+            break;
 
             case 3: 
                 listarFilmes();
