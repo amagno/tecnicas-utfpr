@@ -16,7 +16,7 @@ typedef struct {
     Cliente cliente;
 } Filme;
 
-Filme filmes[QTDE_FILMES];
+Filme filmes[QTDE_FILMES + 1];
 
 void preencherFilmes() {
     char buffer[100];
@@ -25,18 +25,33 @@ void preencherFilmes() {
         sprintf(buffer, "Filme - %d", i);
         Filme filme;
         stpcpy(filme.nome, buffer);
-        filme.cod = 1;
+        filme.cod = i;
         filme.alugado = 0;
         filmes[i] = filme;
     }
 }
+Cliente cadastrarCliente(int cod) {
+    char nome[100];
+    char telefone[100];
+    printf("Digite o nome: ");
+    scanf("%s", nome);
+    printf("Digite o telefone: ");
+    scanf("%s", telefone);
+    Cliente cliente;
+    cliente.cod = cod;
+    strcpy(cliente.nome, nome);
+    strcpy(cliente.telefone, telefone);
+    
+    return cliente; 
+}
 void listarFilmes() {
+    printf("---------- TODOS OS FILMES -----------\n\n");
     for (int i = 1; i <= QTDE_FILMES; i++) {
         printf("CODIGO: %d - NOME: %s\n", filmes[i].cod, filmes[i].nome);
     }
 }
 void listarFilmesDisponiveis() {
-    printf("------ FILMES DISPONIVEIS ------");
+    printf("---------- FILMES DISPONIVEIS -----------\n\n");
     for (int i = 1; i <= QTDE_FILMES; i++) {
         if (filmes[i].alugado == 0) {
             printf("CODIGO: %d - NOME: %s\n", filmes[i].cod, filmes[i].nome);
@@ -44,10 +59,13 @@ void listarFilmesDisponiveis() {
     }
 }
 void listarFilmesAlugados() {
-    printf("------ FILMES ALUGADOS ------");
+    printf("----------- FILMES ALUGADOS ------------\n\n");
     for (int i = 1; i <= QTDE_FILMES; i++) {
         if (filmes[i].alugado == 1) {
-            printf("CODIGO: %d - NOME: %s\n", filmes[i].cod, filmes[i].nome);
+            printf("-------------------------------------\n");
+            printf("CODIGO: %d - NOME: %s\n\n", filmes[i].cod, filmes[i].nome);
+            printf("CLIENTE - NOME: %s, TELEFONE: %s\n\n", filmes[i].cliente.nome, filmes[i].cliente.telefone);
+            printf("-------------------------------------\n");
         }
     }
 }
@@ -56,21 +74,21 @@ void alocarFilme() {
     printf("Digite o codigo do filme: ");
     scanf("%d", &codigo);
 
-    if (codigo == 0) {
-        return;
-    }
+    Cliente cliente = cadastrarCliente(codigo);
 
+    int encontrado = 0;
     for (int i = 1; i <= QTDE_FILMES; i++) {
         if (filmes[i].cod == codigo) {
             filmes[i].alugado = 1;
+            filmes[i].cliente = cliente;
+            encontrado = 1;
         }
     }
+    if (encontrado == 0) {
+        printf("Nenhum filme encontrado com codigo: %d", codigo);
+    }
 }
-Cliente cadastrarCliente() {
-    char nome[100];
-    char telefone[100];
-    printf("Digite o nome: ");
-}
+
 int menu() {
     int op;
 
@@ -90,27 +108,39 @@ int menu() {
     return op;
 }
 
+void tela() {
+    int sair = 0;
+    while(sair == 0) {
+        int op;
+        op = menu();
+        switch(op) {
+            case 1: 
+                alocarFilme();
+            break;
+
+            case 2: break;
+
+            case 3: 
+                listarFilmes();
+            break;
+
+            case 4:
+                listarFilmesDisponiveis();
+            break;
+
+            case 5: 
+                listarFilmesAlugados();
+            break;
+
+            case 6: 
+                sair = 1;
+            break;
+        }
+    }
+}
 int main() {
     preencherFilmes();
-    int op;
-
-    op = menu();
-
-    switch(op) {
-        case 1: break;
-
-        case 2: break;
-
-        case 3: break;
-
-        case 4:
-            listarFilmes();
-        break;
-
-        case 5: break;
-
-        case 6: break;
-    }
+    tela();
 
     return 0;
 }
