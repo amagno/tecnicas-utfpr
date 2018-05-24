@@ -6,7 +6,7 @@
 typedef struct {
     int cod;
     char nome[100];
-    int telefone;
+    char telefone[100];
 } Cliente;
 
 typedef struct {
@@ -19,13 +19,15 @@ typedef struct {
 Filme filmes[QTDE_FILMES];
 
 void preencherFilmes() {
-    char *buffer;
+    char buffer[100];
 
     for (int i = 1; i <= QTDE_FILMES; i++) {
         sprintf(buffer, "Filme - %d", i);
-        stpcpy(filmes[i].nome, buffer);
-        filmes[i].cod = i;
-        filmes[i].alugado = 0;
+        Filme filme;
+        stpcpy(filme.nome, buffer);
+        filme.cod = 1;
+        filme.alugado = 0;
+        filmes[i] = filme;
     }
 }
 void listarFilmes() {
@@ -66,6 +68,7 @@ void alocarFilme() {
 }
 Cliente cadastrarCliente() {
     char nome[100];
+    char telefone[100];
     printf("Digite o nome: ");
 }
 int menu() {
@@ -76,7 +79,7 @@ int menu() {
     printf("----------- L O C A D O R A ------------\n\n");
 
     printf("\n\t 1 - Alocar Filme ");
-    printf("\n\t 2 - Inserir Cliente ");
+    printf("\n\t 2 - Devolver Filme");
     printf("\n\t 3 - Listar Todos os Filmes ");
     printf("\n\t 4 - Listar Filmes Disponiveis");
     printf("\n\t 5 - Listar Filmes Alugados ");
